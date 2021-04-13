@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <ul>
-        <li>
-            <a href="">Registrar datos</a>
-        </li>
-        <li>
-            <a href="">Ver registro</a>
-        </li>
-    </ul>
+    {% for rpos in positivos %}
+        <ul>
+            <li>
+                {{ rpos.email }}
+                {{ rpos.temp }}
+                {{ rpos.oxi }}  
+                {{ rpos.validar }}
+            </li>
+        </ul>   
+    {% endfor %}
 {% endblock %}
