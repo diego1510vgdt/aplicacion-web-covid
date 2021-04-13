@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.views import View
 from .forms import *
 from .models import *
+import datetime
+from django.contrib import messages
 # Create your views here.
 
 class Home(View):
@@ -20,11 +22,22 @@ class Registro(View):
         if form.is_valid():
             reg = form.save(commit=False)
             if (reg.temp > 37.5) or (reg.oxi < 90):
-                reg.save()
-            else:
-                print("Todo Ok")
-            return redirect('index')
+                reg.vali=True
+            reg.save()
+            messages.success(request, 'Registro guardado')
+            return redirect('registro')
         else:
             context = {'form': form}
             return render(request, 'registro.html', context)
-        
+
+
+class Lista(View):
+    def get(self, request):
+        registro = Positivo.objects.all()
+        busqueda = request.GET.get("buscar")
+        if busqueda:
+            registro = Positivo.objects.filter(
+            Q(email = busqueda)
+        ).distinct()
+        context = {'registro' : registro}
+        return render(request, 'listado.html', context)

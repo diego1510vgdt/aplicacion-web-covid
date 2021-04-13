@@ -5,3 +5,4 @@ class PositivoForm(forms.ModelForm):
     class Meta:
         model = Positivo
         fields = '__all__'
+        exclude = ['vali']

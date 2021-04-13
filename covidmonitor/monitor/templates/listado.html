@@ -1,14 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for rpos in positivos %}
-        <ul>
-            <li>
-                {{ rpos.email }}
-                {{ rpos.temp }}
-                {{ rpos.oxi }}  
-                {{ rpos.validar }}
-            </li>
-        </ul>   
-    {% endfor %}
+    <h1> Listado </h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Correo</th>
+                <th scope="col">Temperatura</th>
+                <th scope="col">Oxigenación</th>
+                <th scope="col">Condición</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rpos in registro %}
+                <tr>
+                    <td>{{ rpos.email }}</td>
+                    <td>{{ rpos.temp }}</td>
+                    <td>{{ rpos.oxi }}</td>
+                    <td>
+                        {% if rpos.vali == True %}
+                            Positivo para SARS-CoV2
+                        {% else %}
+                            Negativo para SARS-CoV2
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
