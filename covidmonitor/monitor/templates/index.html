@@ -1,12 +1,45 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <ul>
+    <!--ul>
         <li>
             <a href="{% url 'registro' %}">Registrar datos</a>
         </li>
         <li>
             <a href="{% url 'lista' %}">Ver registro</a>
         </li>
-    </ul>
+    </ul-->
+
+    <!--ul>
+        {% for resp in response %}
+        <li>
+            {{ resp.state }}
+        </li>
+        {% endfor %}
+    </ul-->
+    <h1> Listado de estados </h1>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Código de Estado</th>
+                <th scope="col">Casos positivos</th>
+                <th scope="col">Pacientes Recuperados</th>
+                <th scope="col">Muertes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for resp in response %}
+                <tr>
+                    <td>{{ resp.date }}</td>
+                    <td>{{ resp.state }}</td>
+                    <td>{{ resp.positive }}</td>
+                    <td>{{ resp.recovered }}</td>
+                    <td>{{ resp.death}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
 {% endblock %}

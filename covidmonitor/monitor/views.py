@@ -1,15 +1,18 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views import View
 from .forms import *
 from .models import *
-import datetime
+import datetime, requests
 from django.contrib import messages
 # Create your views here.
 
 class Home(View):
     def get(self, request):
-        return render(request, 'index.html', {})
+        response = requests.get('https://covidtracking.com/api/states')
+        context = {'response' : response.json()}
+        return render(request, 'index.html', context)
+        #return JsonResponse(response.json(), safe=False)
 
 class Registro(View):
     def get(self, request):
@@ -34,10 +37,11 @@ class Registro(View):
 class Lista(View):
     def get(self, request):
         registro = Positivo.objects.all()
-        busqueda = request.GET.get("buscar")
+        '''busqueda = request.GET.get("buscar")
         if busqueda:
             registro = Positivo.objects.filter(
             Q(email = busqueda)
-        ).distinct()
+        ).distinct()'''
         context = {'registro' : registro}
         return render(request, 'listado.html', context)
+
