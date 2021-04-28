@@ -1,23 +1,148 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <!--ul>
-        <li>
-            <a href="{% url 'registro' %}">Registrar datos</a>
-        </li>
-        <li>
-            <a href="{% url 'lista' %}">Ver registro</a>
-        </li>
-    </ul-->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-sm">
+                <div class="card shadow p-3 mb-5 bg-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h3 class="card-title"> {{ datosEUtm.totalCases }} </h3>
+                                <p class="card-text">Total de casos</p>
+                            </div>
+                            <div class="col-2 my_div_color">
+                                <i class="fas fa-ambulance my_icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card shadow p-3 mb-5 bg-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h3 class="card-title"> {{ datosEUpn.0.negative }} </h3>
+                                <p class="card-text">Negativos</p>
+                            </div>
+                            <div class="col-2 my_div_color">
+                                <i class="fas fa-briefcase-medical my_icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card shadow p-3 mb-5 bg-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h3 class="card-title"> {{ datosEUpn.0.positive }} </h3>
+                                <p class="card-text">Positivos</p>
+                            </div>
+                            <div class="col-2 my_div_color">
+                                <i class="fas fa-diagnoses my_icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="card shadow p-3 mb-5 bg-body">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm">
+                                <h3 class="card-title"> {{ datosEUtm.totalDeaths }} </h3>
+                                <p class="card-text"> Total de muertes </p>
+                            </div>
+                            <div class="col-2 my_div_color">
+                                <i class="fas fa-dizzy my_icon"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="card shadow p-3 mb-5 bg-body">
+            <div class="card-body">
+                <canvas id="myChart" width="1000" height="400"></canvas>
+            </div>
+        </div>
+    </div>
 
-    <!--ul>
-        {% for resp in response %}
-        <li>
-            {{ resp.state }}
-        </li>
-        {% endfor %}
-    </ul-->
-    <h1> Listado de estados </h1>
+    <div class="container">
+        <div class="card shadow p-3 mb-5 bg-body">
+            <div class="card-body my_div_table">
+                <table class="table table-hover my_table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha de actualización</th>
+                            <th scope="col">Código de Estado</th>
+                            <th scope="col">Casos positivos</th>
+                            <th scope="col">Pacientes Recuperados</th>
+                            <th scope="col">Muertes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resp in lista_estados %}
+                            <tr>
+                                <td>{{ resp.date }}</td>
+                                <td>{{ resp.state }}</td>
+                                <td>{{ resp.positive }}</td>
+                                <td>{{ resp.recovered }}</td>
+                                <td>{{ resp.death}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['New York', 'California', 'Ilinois', 'Texas', 'Arizona', 'Pensilvania', 'North Carolina', 'Ohio', 'Florida', 'Indiana'],
+                datasets: [{
+                    label: 'Casos positiivos por estado',
+                    data: {{data}},
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        </script>
+{% endblock %}
+
+    <!--h1> Listado de estados </h1>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -39,7 +164,4 @@
                 </tr>
             {% endfor %}
         </tbody>
-    </table>
-
-
-{% endblock %}
+    </table-->

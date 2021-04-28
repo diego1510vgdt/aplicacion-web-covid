@@ -10,9 +10,24 @@ from django.contrib import messages
 class Home(View):
     def get(self, request):
         response = requests.get('https://covidtracking.com/api/states')
-        context = {'response' : response.json()}
+        response1 = requests.get('https://api.covidtracking.com/v1/us/current.json')
+        response2 = requests.get('https://api.apify.com/v2/key-value-stores/moxA3Q0aZh5LosewB/records/LATEST?disableRedirect=true')
+        
+        grafica = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'NC', 'OH', 'FL', 'IN']
+        data = []
+        for state in response.json():
+            for st in grafica:
+                if state['state'] == st:
+                    data.append(state['positive'])
+        print(data)
+
+        context = {
+            'lista_estados' : response.json(),
+            'datosEUpn' : response1.json(),
+            'datosEUtm' : response2.json(),
+            'data' : data
+        }
         return render(request, 'index.html', context)
-        #return JsonResponse(response.json(), safe=False)
 
 class Registro(View):
     def get(self, request):
