@@ -5,14 +5,14 @@ from .forms import *
 from .models import *
 import datetime, requests
 from django.contrib import messages
-# Create your views here.
+from rest_framework import viewsets
+from .serializers import Usuario
 
 class Home(View):
     def get(self, request):
         response = requests.get('https://covidtracking.com/api/states')
         response1 = requests.get('https://api.covidtracking.com/v1/us/current.json')
         response2 = requests.get('https://api.apify.com/v2/key-value-stores/moxA3Q0aZh5LosewB/records/LATEST?disableRedirect=true')
-        
         grafica = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'NC', 'OH', 'FL', 'IN']
         data = []
         for state in response.json():
@@ -20,7 +20,6 @@ class Home(View):
                 if state['state'] == st:
                     data.append(state['positive'])
         print(data)
-
         context = {
             'lista_estados' : response.json(),
             'datosEUpn' : response1.json(),
@@ -41,22 +40,20 @@ class Registro(View):
             reg = form.save(commit=False)
             if (reg.temp > 37.5) or (reg.oxi < 90):
                 reg.vali=True
+                messages.success(request, 'Positivo para SARS-CoV2')
             reg.save()
-            messages.success(request, 'Registro guardado')
             return redirect('registro')
         else:
             context = {'form': form}
             return render(request, 'registro.html', context)
 
-
 class Lista(View):
     def get(self, request):
         registro = Positivo.objects.all()
-        '''busqueda = request.GET.get("buscar")
-        if busqueda:
-            registro = Positivo.objects.filter(
-            Q(email = busqueda)
-        ).distinct()'''
         context = {'registro' : registro}
         return render(request, 'listado.html', context)
+
+class RegistroViewSet(viewsets.ModelViewSet):
+    queryset = Positivo.objects.all().order_by('timestamp')
+    serializer_class = Usuario
 
